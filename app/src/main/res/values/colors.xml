@@ -1,0 +1,10 @@
+<!-- File: res/values/colors.xml -->
+<resources>
+    <color name="purple_500">#9c27b0</color>
+    <color name="purple_700">#7b1fa2</color>
+    <color name="teal_200">#80cbc4</color>
+    <color name="blue">#2196F3</color>
+    <color name="teal_500">#009688</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>
