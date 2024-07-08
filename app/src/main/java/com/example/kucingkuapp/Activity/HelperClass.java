@@ -1,24 +1,19 @@
 package com.example.kucingkuapp.Activity;
 
 public class HelperClass {
-    String name, email, password, confirmPassword;
+    private String name, email, password; // Ensure private access modifiers for encapsulation
 
-    // Default constructor
     public HelperClass() {
-    }
-
-    // Parameterized constructor
-    public HelperClass(String name, String email, String password, String confirmPassword) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.confirmPassword = confirmPassword;
+        // Default constructor required for calls to DataSnapshot.getValue(HelperClass.class)
     }
 
     public HelperClass(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
     }
 
-    // Getter and setter for name
+    // Getters and setters (optional based on your needs)
     public String getName() {
         return name;
     }
@@ -27,7 +22,6 @@ public class HelperClass {
         this.name = name;
     }
 
-    // Getter and setter for email
     public String getEmail() {
         return email;
     }
@@ -36,21 +30,11 @@ public class HelperClass {
         this.email = email;
     }
 
-    // Getter and setter for password
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    // Getter and setter for confirmPassword
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
     }
 }
