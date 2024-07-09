@@ -1,4 +1,4 @@
-package com.example.kucingkuapp.Activity;
+package com.example.kucingkuapp.Activity.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 

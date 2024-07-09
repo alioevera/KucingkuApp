@@ -1,4 +1,4 @@
-package com.example.kucingkuapp.Activity;
+package com.example.kucingkuapp.Activity.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.kucingkuapp.Activity.Database.HelperClass;
 import com.example.kucingkuapp.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;

@@ -1,4 +1,4 @@
-package com.example.kucingkuapp.Activity;
+package com.example.kucingkuapp.Activity.Database;
 
 public class HelperClass {
     private String name, email, password; // Ensure private access modifiers for encapsulation
