@@ -66,9 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 placesList.clear();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Log.d(TAG, dataSnapshot.getKey() + dataSnapshot.getValue(Place.class) );
-
-                    Place place = null;
+                    Place place = dataSnapshot.getValue(Place.class);
                     if (place != null) {
                         placesList.add(place);
                         Log.d(TAG, "Place added: ");
