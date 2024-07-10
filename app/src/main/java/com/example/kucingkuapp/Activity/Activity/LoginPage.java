@@ -79,7 +79,7 @@ public class LoginPage extends AppCompatActivity {
                             }
                         }
                     }
-                    Toast.makeText(LoginPage.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginPage.this, "Invattlid email or password", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(LoginPage.this, "User not found", Toast.LENGTH_SHORT).show();
                 }

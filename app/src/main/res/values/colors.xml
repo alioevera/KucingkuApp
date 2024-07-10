@@ -9,4 +9,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="primary">#72b9fd</color>
     <color name="accent">#d3e5fb</color>
+    <color name="orange">#fe6900</color>
+    <color name="second">#3AA3A5</color>
+    <color name="darkBlue">#253f66</color>
+    <color name="lightGray">#efefef</color>
 </resources>
