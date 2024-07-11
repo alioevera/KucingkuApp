@@ -26,8 +26,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private RecyclerView recyclerViewRecommended;
-    private ProgressBar progressBarRecommended;
+    private RecyclerView recyclerViewCategory; // Changed to Category RecyclerView
+    private ProgressBar progressBarCategory; // Changed to Category ProgressBar
     private List<Place> placesList;
     private PlacesAdapter placesAdapter;
     private DatabaseReference databaseReference;
@@ -37,17 +37,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recyclerViewRecommended = findViewById(R.id.recyclerViewRecommended);
-        progressBarRecommended = findViewById(R.id.progressBarRecommended);
+        recyclerViewCategory = findViewById(R.id.recyclerViewCategory); // Changed to Category RecyclerView
+        progressBarCategory = findViewById(R.id.progressBarCategory); // Changed to Category ProgressBar
 
         // Setup RecyclerView
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerViewRecommended.setLayoutManager(layoutManager);
+        recyclerViewCategory.setLayoutManager(layoutManager); // Changed to Category RecyclerView
 
         // Initialize adapter with empty list
         placesList = new ArrayList<>();
         placesAdapter = new PlacesAdapter(placesList);
-        recyclerViewRecommended.setAdapter(placesAdapter);
+        recyclerViewCategory.setAdapter(placesAdapter); // Changed to Category RecyclerView
 
         // Initialize Firebase database reference
         databaseReference = FirebaseDatabase.getInstance().getReference("PlacesSet");
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadDataFromFirebase() {
-        progressBarRecommended.setVisibility(View.VISIBLE);
+        progressBarCategory.setVisibility(View.VISIBLE); // Changed to Category ProgressBar
 
         // Add listener to fetch data
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                     Place place = dataSnapshot.getValue(Place.class);
                     if (place != null) {
                         placesList.add(place);
-                        Log.d(TAG, "Place added: ");
+                        Log.d(TAG, "Place added: " + place.getPlName());
                     }
                 }
 
@@ -77,13 +77,13 @@ public class MainActivity extends AppCompatActivity {
                 placesAdapter.notifyDataSetChanged();
 
                 // Hide ProgressBar
-                progressBarRecommended.setVisibility(View.GONE);
+                progressBarCategory.setVisibility(View.GONE); // Changed to Category ProgressBar
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // Handle error
-                progressBarRecommended.setVisibility(View.GONE);
+                progressBarCategory.setVisibility(View.GONE); // Changed to Category ProgressBar
                 Toast.makeText(MainActivity.this, "Failed to load places: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "Failed to load places", error.toException());
             }
