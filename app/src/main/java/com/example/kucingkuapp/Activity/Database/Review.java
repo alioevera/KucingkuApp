@@ -17,6 +17,9 @@ public class Review {
         this.placeName = placeName;
     }
 
+    public Review(String username, String reviewText, String s, String placeName) {
+    }
+
     public String getUsername() {
         return username;
     }

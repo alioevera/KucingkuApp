@@ -36,6 +36,11 @@
             android:exported="false">
         </activity>
 
+        <activity
+            android:name=".Activity.Activity.ReserveActivity"
+            android:exported="false">
+        </activity>
+
     </application>
 
 </manifest>

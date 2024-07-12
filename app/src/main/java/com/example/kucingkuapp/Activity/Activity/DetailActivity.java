@@ -3,6 +3,7 @@ package com.example.kucingkuapp.Activity.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,6 +37,7 @@ public class DetailActivity extends AppCompatActivity {
     private DatabaseReference reviewReference;
     private Place place;
     private ImageButton backButton;
+    private Button reservationButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,51 +51,66 @@ public class DetailActivity extends AppCompatActivity {
         placeImage = findViewById(R.id.placeImage);
         reviewRecyclerView = findViewById(R.id.reviewRecyclerView);
         backButton = findViewById(R.id.ic_back);
+        reservationButton = findViewById(R.id.reservationButton);
 
+        // Retrieve Place object from Intent
         place = (Place) getIntent().getSerializableExtra("place");
 
-        placeName.setText(place.getPlName());
-        placeAddress.setText(place.getPlAddress());
-        placeOwner.setText("Owner: " + place.getPlOwner());
-        placeRating.setText("Rating: " + place.getRating());
+        if (place != null) {
+            placeName.setText(place.getPlName());
+            placeAddress.setText(place.getPlAddress());
+            placeOwner.setText("Owner: " + place.getPlOwner());
+            placeRating.setText("Rating: " + place.getRating());
 
-        Glide.with(this)
-                .load(place.getPlImage())
-                .into(placeImage);
+            // Load image using Glide
+            Glide.with(this)
+                    .load(place.getPlImage())
+                    .into(placeImage);
 
-        // Set up RecyclerView for reviews
-        reviewRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        reviewList = new ArrayList<>();
-        reviewAdapter = new ReviewAdapter(reviewList);
-        reviewRecyclerView.setAdapter(reviewAdapter);
+            // Set up RecyclerView for reviews
+            reviewRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            reviewList = new ArrayList<>();
+            reviewAdapter = new ReviewAdapter(reviewList);
+            reviewRecyclerView.setAdapter(reviewAdapter);
 
-        // Fetch reviews from Firebase
-        reviewReference = FirebaseDatabase.getInstance().getReference("reviews");
-        reviewReference.orderByChild("placeName").equalTo(place.getPlName()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                reviewList.clear();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Review review = dataSnapshot.getValue(Review.class);
-                    if (review != null) {
-                        Log.d("DetailActivity", "Review fetched: " + review.getUsReview());
-                        reviewList.add(review);
+            // Fetch reviews from Firebase for this place
+            reviewReference = FirebaseDatabase.getInstance().getReference("reviews");
+            reviewReference.orderByChild("placeName").equalTo(place.getPlName()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    reviewList.clear();
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        Review review = dataSnapshot.getValue(Review.class);
+                        if (review != null) {
+                            Log.d("DetailActivity", "Review fetched: " + review.getUsReview());
+                            reviewList.add(review);
+                        }
                     }
+                    reviewAdapter.notifyDataSetChanged();
                 }
-                reviewAdapter.notifyDataSetChanged();
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("DetailActivity", "Database error: " + error.getMessage());
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("DetailActivity", "Database error: " + error.getMessage());
+                }
+            });
 
-        // Set onClickListener for back button
-        backButton.setOnClickListener(v -> {
-            Intent intent = new Intent(DetailActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish(); // Optionally close DetailActivity
-        });
+            // Set onClickListener for back button
+            backButton.setOnClickListener(v -> {
+                Intent intent = new Intent(DetailActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish(); // Optionally close DetailActivity
+            });
+
+            // Set onClickListener for reservation button
+            reservationButton.setOnClickListener(v -> {
+                Intent intent = new Intent(DetailActivity.this, ReserveActivity.class);
+                intent.putExtra("PLACE_NAME", place.getPlName()); // Pass placeName to ReserveActivity
+                startActivity(intent);
+            });
+        } else {
+            Log.e("DetailActivity", "Place object is null");
+            // Optionally handle case where place object is null
+        }
     }
 }
