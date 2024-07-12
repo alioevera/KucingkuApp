@@ -1,9 +1,11 @@
 package com.example.kucingkuapp.Activity.Activity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -17,11 +19,11 @@ import com.example.kucingkuapp.Activity.Adapter.PlacesAdapter;
 import com.example.kucingkuapp.Activity.Database.Place;
 import com.example.kucingkuapp.Activity.Database.Review;
 import com.example.kucingkuapp.R;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +37,16 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spinnerPlace;
     private EditText editTextUsername, editTextReview;
     private RatingBar ratingBar;
-    private Button buttonSubmitReview; // Tambahkan deklarasi Button
+    private Button buttonSubmitReview;
+    private ProgressBar progressBarCategory; // Deklarasi ProgressBar
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Inisialisasi ProgressBar
+        progressBarCategory = findViewById(R.id.progressBarCategory);
 
         recyclerViewCategory = findViewById(R.id.recyclerViewCategory);
         recyclerViewCategory.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -52,9 +58,11 @@ public class MainActivity extends AppCompatActivity {
         editTextUsername = findViewById(R.id.editTextUsername);
         editTextReview = findViewById(R.id.editTextReview);
         ratingBar = findViewById(R.id.ratingBar);
-        buttonSubmitReview = findViewById(R.id.buttonSubmitReview); // Inisialisasi Button
+        buttonSubmitReview = findViewById(R.id.buttonSubmitReview);
 
         // Fetch data from Firebase
+        progressBarCategory.setVisibility(View.VISIBLE); // Tampilkan ProgressBar
+
         databaseReference = FirebaseDatabase.getInstance().getReference("PlacesSet");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -76,11 +84,14 @@ public class MainActivity extends AppCompatActivity {
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, placeNames);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerPlace.setAdapter(adapter);
+
+                progressBarCategory.setVisibility(View.GONE); // Sembunyikan ProgressBar setelah selesai
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(MainActivity.this, "Error fetching data.", Toast.LENGTH_SHORT).show();
+                progressBarCategory.setVisibility(View.GONE); // Sembunyikan ProgressBar jika ada error
             }
         });
 
