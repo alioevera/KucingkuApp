@@ -1,5 +1,8 @@
+// PlacesAdapter.java
 package com.example.kucingkuapp.Activity.Adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.kucingkuapp.Activity.Database.Place;
+import com.example.kucingkuapp.Activity.Activity.DetailActivity;
 import com.example.kucingkuapp.R;
 
 import java.util.List;
@@ -18,9 +22,11 @@ import java.util.List;
 public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.PlacesViewHolder> {
 
     private List<Place> placesList;
+    private Context context;
 
-    public PlacesAdapter(List<Place> placesList) {
+    public PlacesAdapter(List<Place> placesList, Context context) {
         this.placesList = placesList;
+        this.context = context;
     }
 
     @NonNull
@@ -43,6 +49,12 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.PlacesView
         Glide.with(holder.itemView.getContext())
                 .load(place.getPlImage())
                 .into(holder.placeImage);
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, DetailActivity.class);
+            intent.putExtra("place",  place); // Pass Place object via intent
+            context.startActivity(intent);
+        });
     }
 
     @Override

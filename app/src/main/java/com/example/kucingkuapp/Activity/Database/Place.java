@@ -1,14 +1,26 @@
+// Place.java
 package com.example.kucingkuapp.Activity.Database;
 
-public class Place {
+import java.io.Serializable;
+
+public class Place implements Serializable {
+
     private String plName;
     private String plAddress;
     private String plOwner;
+    private float rating;
     private String plImage;
-    private float rating; // Changed to float
 
     public Place() {
         // Default constructor required for calls to DataSnapshot.getValue(Place.class)
+    }
+
+    public Place(String plName, String plAddress, String plOwner, float rating, String plImage) {
+        this.plName = plName;
+        this.plAddress = plAddress;
+        this.plOwner = plOwner;
+        this.rating = rating;
+        this.plImage = plImage;
     }
 
     public String getPlName() {
@@ -35,19 +47,19 @@ public class Place {
         this.plOwner = plOwner;
     }
 
-    public String getPlImage() {
-        return plImage;
-    }
-
-    public void setPlImage(String plImage) {
-        this.plImage = plImage;
-    }
-
     public float getRating() {
         return rating;
     }
 
     public void setRating(float rating) {
         this.rating = rating;
+    }
+
+    public String getPlImage() {
+        return plImage;
+    }
+
+    public void setPlImage(String plImage) {
+        this.plImage = plImage;
     }
 }
