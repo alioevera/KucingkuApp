@@ -62,7 +62,7 @@ public class ReserveActivity extends AppCompatActivity {
         dateButton.setOnClickListener(v -> showDatePickerDialog());
         timeButton.setOnClickListener(v -> showTimePickerDialog());
         submitBtn.setOnClickListener(v -> submitReservation());
-        backButton.setOnClickListener(v -> onBackPressed()); // Handle back navigation
+        backButton.setOnClickListener(v -> navigateToDetailActivity());
     }
 
     private void showDatePickerDialog() {
@@ -89,16 +89,15 @@ public class ReserveActivity extends AppCompatActivity {
     }
 
     private void submitReservation() {
+        if (!validateInputs()) {
+            return;
+        }
+
         String name = inputName.getText().toString().trim();
         String place = placeName.getText().toString().trim();
         String date = reservationDate.getText().toString().trim();
         String time = startTime.getText().toString().trim();
         String duration = durationSpinner.getSelectedItem().toString();
-
-        if (name.isEmpty() || place.isEmpty() || date.isEmpty() || time.isEmpty() || duration.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         String reservationId = reservationReference.push().getKey();
         String status = "Progress"; // Set initial status to "Progress"
@@ -113,4 +112,26 @@ public class ReserveActivity extends AppCompatActivity {
             }
         });
     }
+
+    private boolean validateInputs() {
+        String name = inputName.getText().toString().trim();
+        String place = placeName.getText().toString().trim();
+        String date = reservationDate.getText().toString().trim();
+        String time = startTime.getText().toString().trim();
+        String duration = durationSpinner.getSelectedItem() != null ? durationSpinner.getSelectedItem().toString() : "";
+
+        if (name.isEmpty() || place.isEmpty() || date.isEmpty() || time.isEmpty() || duration.isEmpty()) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private void navigateToDetailActivity() {
+        Intent intent = new Intent(ReserveActivity.this, DetailActivity.class);
+        startActivity(intent);
+        
+        finish();
+    }
 }
+

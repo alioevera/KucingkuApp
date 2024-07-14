@@ -1,5 +1,6 @@
 package com.example.kucingkuapp.Activity.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -19,6 +20,7 @@ import com.example.kucingkuapp.Activity.Adapter.PlacesAdapter;
 import com.example.kucingkuapp.Activity.Database.Place;
 import com.example.kucingkuapp.Activity.Database.Review;
 import com.example.kucingkuapp.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,14 +40,13 @@ public class MainActivity extends AppCompatActivity {
     private EditText editTextUsername, editTextReview;
     private RatingBar ratingBar;
     private Button buttonSubmitReview;
-    private ProgressBar progressBarCategory; // Deklarasi ProgressBar
+    private ProgressBar progressBarCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Inisialisasi ProgressBar
         progressBarCategory = findViewById(R.id.progressBarCategory);
 
         recyclerViewCategory = findViewById(R.id.recyclerViewCategory);
@@ -60,8 +61,7 @@ public class MainActivity extends AppCompatActivity {
         ratingBar = findViewById(R.id.ratingBar);
         buttonSubmitReview = findViewById(R.id.buttonSubmitReview);
 
-        // Fetch data from Firebase
-        progressBarCategory.setVisibility(View.VISIBLE); // Tampilkan ProgressBar
+        progressBarCategory.setVisibility(View.VISIBLE);
 
         databaseReference = FirebaseDatabase.getInstance().getReference("PlacesSet");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 placesAdapter.notifyDataSetChanged();
 
-                // Set data to Spinner
                 List<String> placeNames = new ArrayList<>();
                 for (Place place : placesList) {
                     placeNames.add(place.getPlName());
@@ -85,18 +84,32 @@ public class MainActivity extends AppCompatActivity {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerPlace.setAdapter(adapter);
 
-                progressBarCategory.setVisibility(View.GONE); // Sembunyikan ProgressBar setelah selesai
+                progressBarCategory.setVisibility(View.GONE);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(MainActivity.this, "Error fetching data.", Toast.LENGTH_SHORT).show();
-                progressBarCategory.setVisibility(View.GONE); // Sembunyikan ProgressBar jika ada error
+                progressBarCategory.setVisibility(View.GONE);
             }
         });
 
-        // Set OnClickListener untuk tombol submit review
         buttonSubmitReview.setOnClickListener(v -> submitReview());
+
+        // Setup BottomNavigationView
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.navigation_history) {
+                startActivity(new Intent(MainActivity.this, HistoryActivity.class));
+                return true;
+            } else if (item.getItemId() == R.id.navigation_settings) {
+                startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                return true;
+            }
+            // Handle other menu items if needed
+            return false;
+        });
+
     }
 
     private void submitReview() {
@@ -105,21 +118,17 @@ public class MainActivity extends AppCompatActivity {
         float rating = ratingBar.getRating();
         String placeName = spinnerPlace.getSelectedItem() != null ? spinnerPlace.getSelectedItem().toString() : "";
 
-        // Validasi input
         if (username.isEmpty() || reviewText.isEmpty() || placeName.isEmpty()) {
             Toast.makeText(MainActivity.this, "Please fill in all fields.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Buat objek Review baru
         Review review = new Review(username, reviewText, rating, placeName);
 
-        // Simpan review ke Firebase Database
         DatabaseReference reviewsReference = FirebaseDatabase.getInstance().getReference("reviews");
         reviewsReference.push().setValue(review)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(MainActivity.this, "Review submitted successfully!", Toast.LENGTH_SHORT).show();
-                    // Clear input fields after successful submission
                     editTextUsername.setText("");
                     editTextReview.setText("");
                     ratingBar.setRating(0);
